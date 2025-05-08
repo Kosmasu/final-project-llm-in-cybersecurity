@@ -10,3 +10,4 @@ wheels/
 .venv
 datasets/
 .env
+gemma-text-to-sql/
