@@ -11,3 +11,6 @@ wheels/
 datasets/
 .env
 gemma-text-to-sql/
+bm25_retriever/
+phishing_bm25_retriever/
+phishing_email_index/

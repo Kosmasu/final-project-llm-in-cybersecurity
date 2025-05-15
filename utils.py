@@ -39,3 +39,11 @@ def extract_and_validate_json(
         return cls.model_validate_json(string)
     except ValidationError:
         return None
+
+def sanitize_email(email: str) -> str:
+    """
+    Sanitize the email by removing any unwanted characters or formatting.
+    """
+    # Remove any unwanted characters or formatting
+    sanitized_email = email.replace("\n", " ").replace("\r", " ")
+    return sanitized_email

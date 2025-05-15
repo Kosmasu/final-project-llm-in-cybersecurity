@@ -1,8 +1,6 @@
 import enum
 from typing import TypeVar
-from openai import Stream
 from openai.types.chat.chat_completion import ChatCompletion
-from openai.types.chat.chat_completion_chunk import ChatCompletionChunk
 from openai.types.chat.parsed_chat_completion import (
     ParsedChatCompletion,
     ParsedChatCompletionMessage,
@@ -11,24 +9,32 @@ from pydantic import BaseModel
 
 from conversations import Conversation
 from langfuse.openai import OpenAI
-from langfuse.decorators import observe
+
+from settings import DEEPINFRA_API_KEY
 
 T = TypeVar("T", bound=BaseModel)
 
-client = OpenAI(
-    base_url="http://localhost:11434/v1/",
-    api_key="ollama",
-)
+# client = OpenAI(
+#     base_url="http://localhost:11434/v1/",
+#     api_key="ollama",
+# )
 
+
+client = OpenAI(
+    api_key=DEEPINFRA_API_KEY,
+    base_url="https://api.deepinfra.com/v1/openai",
+)
 
 class LLMName(str, enum.Enum):
     LLAMA_3_1_8B = "llama3.1"
     LLAMA_3_1_CHATQA = "llama3-chatqa"
+    DEEPINFRA_LLAMA_3_1_8B = "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo"
 
 
 class LLM:
     def __init__(self, model_name: LLMName):
         self.model_name = model_name
+
     def generate(self, convo: Conversation) -> str:
         chat_completion: ChatCompletion = client.chat.completions.create(
             model=self.model_name,

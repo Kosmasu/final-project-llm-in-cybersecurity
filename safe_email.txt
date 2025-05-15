@@ -1,0 +1,27 @@
+Subject: Your Monthly Account Statement - June 2023
+
+Dear Maria Smith,
+
+Thank you for being a valued customer at Acme Financial Services. Your monthly account statement for June 2023 is now available in your online portal.
+
+Monthly Summary:
+- Previous Balance: $3,425.65
+- Payments: $500.00
+- Purchases: $215.32
+- Current Balance: $3,140.97
+
+Important Notes:
+- Your automatic payment of $250 is scheduled for July 15, 2023
+- Our branch will be closed on July 4th for Independence Day
+- We've updated our privacy policy. You can review the changes at our website
+
+If you have any questions about your account, please contact our customer service team at 1-800-555-1234 or reply to this email.
+
+Thank you for choosing Acme Financial Services.
+
+Best regards,
+John Reynolds
+Customer Relations Manager
+Acme Financial Services
+john.reynolds@acmefinancial.com
+1-800-555-1234

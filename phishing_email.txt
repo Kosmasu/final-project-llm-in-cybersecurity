@@ -1,0 +1,27 @@
+Subject: URGENT: Your Account Has Been Compromised - Immediate Action Required!!!
+
+Dear Valued Customer,
+
+We have detected suspicious activity on your amazon account. Your account has been TEMPORARILY SUSPENDED until you verify your information.
+
+You must update your billing information with in 24 hours or your account will be permanently deactivated!!! To avoid service interuption, please click on the following link:
+
+>> CLICK HERE TO SECURE YOUR ACCOUNT NOW <<
+http://amazn-account-verify.securitycheck03.info/login
+
+You will need to confirm:
+- Full name
+- Billing address
+- Credit card information
+- Social security number
+- Date of birth
+
+Failure to verify your information immediately will result in permanent account suspension and possible fraudulent charges to your account.
+
+This is not a joke! We have already notified the authorities about the suspicious login attempts from foreign countries.
+
+Do not ignore this email or you will regret it.
+
+Regards,
+Amazon Security Team
+security@amazon-account-services.info

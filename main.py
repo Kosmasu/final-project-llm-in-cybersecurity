@@ -1,19 +1,24 @@
 import streamlit as st
 
 from conversations import Conversation
+from embedding import load_bm25_retriever
 from llm import LLM, LLMName
-from phishing_detection import (
-    classify_phishing_pretrained,
-    explain_phishing_evaluation,
-)
+from phishing_mode import classify_phishing_pretrained
 
 
-from qa import Mode, answer_question, determine_mode
+from qa_mode import Mode, answer_question, determine_mode
 from langfuse import Langfuse
 from langfuse.decorators import langfuse_context, observe
 
+from settings import LANGFUSE_PUBLIC_KEY, LANGFUSE_SECRET_KEY, RETRIEVER_PATH
 
-langfuse = Langfuse()
+
+langfuse = Langfuse(
+    public_key=LANGFUSE_PUBLIC_KEY,
+    secret_key=LANGFUSE_SECRET_KEY,
+    host="https://cloud.langfuse.com",
+)
+
 
 st.title("Final Project")
 
@@ -21,21 +26,22 @@ ID_LLM_BASE = "llm_base"
 ID_LLM_QA = "llm_qa"
 ID_LLM_PHISHING = "llm_phishing"
 ID_CONVO = "convo"
+ID_RETRIEVER = "retriever"
 
 if ID_LLM_BASE not in st.session_state:
-    llm_base: LLM = LLM(model_name=LLMName.LLAMA_3_1_8B)
+    llm_base: LLM = LLM(model_name=LLMName.DEEPINFRA_LLAMA_3_1_8B)
     st.session_state[ID_LLM_BASE] = llm_base
 else:
     llm_base: LLM = st.session_state[ID_LLM_BASE]
 
 if ID_LLM_QA not in st.session_state:
-    llm_qa: LLM = LLM(model_name=LLMName.LLAMA_3_1_8B)
+    llm_qa: LLM = LLM(model_name=LLMName.DEEPINFRA_LLAMA_3_1_8B)
     st.session_state[ID_LLM_QA] = llm_qa
 else:
     llm_qa: LLM = st.session_state[ID_LLM_QA]
 
 if ID_LLM_PHISHING not in st.session_state:
-    llm_phishing: LLM = LLM(model_name=LLMName.LLAMA_3_1_8B)
+    llm_phishing: LLM = LLM(model_name=LLMName.DEEPINFRA_LLAMA_3_1_8B)
     st.session_state[ID_LLM_PHISHING] = llm_phishing
 else:
     llm_phishing: LLM = st.session_state[ID_LLM_PHISHING]
@@ -45,6 +51,12 @@ if ID_CONVO not in st.session_state:
     st.session_state[ID_CONVO] = convo
 else:
     convo: Conversation = st.session_state[ID_CONVO]
+
+if ID_RETRIEVER not in st.session_state:
+    loaded_bm25_retriever = load_bm25_retriever(RETRIEVER_PATH)
+    st.session_state[ID_RETRIEVER] = loaded_bm25_retriever
+else:
+    loaded_bm25_retriever = st.session_state[ID_RETRIEVER]
 
 for message in convo.messages:
     with st.chat_message(message.role):
@@ -95,7 +107,8 @@ def main():
 
             phishing_evaluation = classify_phishing_pretrained(
                 llm=llm_phishing,
-                email=user_message,
+                retriever=loaded_bm25_retriever,
+                user_query=user_message,
             )
             if not phishing_evaluation:
                 response = "Failed to classify email."
@@ -104,11 +117,14 @@ def main():
             else:
                 with st.chat_message("alert", avatar=":material/settings:"):
                     st.markdown("Phishing evaluation completed. Generating response...")
-                response = explain_phishing_evaluation(
-                    llm=llm_qa,
-                    email=user_message,
-                    phishing_evaluation=phishing_evaluation,
-                )
+                response = f"""
+### Phishing Evaluation
+Email is detected as {"**PHISHING**" if phishing_evaluation.is_phishing else "**NOT PHISHING**"}.
+### Reason
+{phishing_evaluation.reason}
+### Explanation
+{phishing_evaluation.explanation}
+""".strip()
 
         with st.chat_message("assistant"):
             st.markdown(response)
