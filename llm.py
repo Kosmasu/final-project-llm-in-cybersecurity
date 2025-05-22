@@ -60,7 +60,6 @@ class LLM:
         else:
             raise ValueError("Failed to parse response")
 
-
 if __name__ == "__main__":
     convo = Conversation()
     convo.add_user_message("Hello")

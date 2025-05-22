@@ -4,6 +4,7 @@ from conversations import Conversation
 from embedding import load_bm25_retriever
 from llm import LLM, LLMName
 from phishing_mode import classify_phishing_pretrained
+from search import search_and_fetch_contents  # Added import
 
 
 from qa_mode import Mode, answer_question, determine_mode
@@ -18,9 +19,6 @@ langfuse = Langfuse(
     secret_key=LANGFUSE_SECRET_KEY,
     host="https://cloud.langfuse.com",
 )
-
-
-st.title("Final Project")
 
 ID_LLM_BASE = "llm_base"
 ID_LLM_QA = "llm_qa"
@@ -58,6 +56,16 @@ if ID_RETRIEVER not in st.session_state:
 else:
     loaded_bm25_retriever = st.session_state[ID_RETRIEVER]
 
+
+def reset():
+    convo.messages = []
+    st.session_state[ID_CONVO] = convo
+
+
+st.title("Final Project")
+
+st.button("Reset", on_click=reset)
+
 for message in convo.messages:
     with st.chat_message(message.role):
         st.markdown(message.content)
@@ -90,18 +98,33 @@ def main():
 
         if mode.mode == "qa":
             # QA mode pipeline here
-            # TODO: Implement the QA mode pipeline: RAG, etc.
             with st.chat_message("alert", avatar=":material/settings:"):
-                st.markdown("Q&A mode detected. Generating response...")
+                st.markdown(
+                    "Q&A mode detected. Performing web search for relevant information..."
+                )
+
+            # Perform web search to get context
+            context_docs = search_and_fetch_contents(user_message, num_results=3)
+
+            if context_docs:
+                with st.chat_message("alert", avatar=":material/settings:"):
+                    st.markdown(
+                        f"Found {len(context_docs)} relevant document(s). Generating response..."
+                    )
+            else:
+                with st.chat_message("alert", avatar=":material/settings:"):
+                    st.markdown(
+                        "No specific documents found via web search. Generating response based on general knowledge..."
+                    )
 
             response = answer_question(
                 llm=llm_qa,
                 convo=convo,
                 user_query=user_message,
+                context=context_docs,  # Pass fetched context
             )
         else:
             # Phishing detection mode pipeline here
-            # TODO: Change to finetuned model, and RAG on similar emails
             with st.chat_message("alert", avatar=":material/settings:"):
                 st.markdown("Phishing detection mode detected. Classifying email...")
 
