@@ -143,8 +143,6 @@ Email is detected as {"**PHISHING**" if phishing_evaluation.is_phishing else "**
 {phishing_evaluation.explanation}
 """.strip()
 
-    with st.chat_message("assistant"):
-        st.markdown(response)
     convo.add_user_message(user_message)
     convo.add_assistant_message(response)
     langfuse_context.update_current_observation(
@@ -153,7 +151,6 @@ Email is detected as {"**PHISHING**" if phishing_evaluation.is_phishing else "**
 
     st.session_state[ID_CONVO] = convo
     yield response
-
 
 
 @observe(capture_input=False, capture_output=False, name="answer")
@@ -172,7 +169,7 @@ def main():
             elif isinstance(output, Alert):
                 alert = output
                 with st.chat_message("alert", avatar=":material/settings:"):
-                    st.markdown(alert)
+                    st.markdown(alert.message)
 
 
 main()
