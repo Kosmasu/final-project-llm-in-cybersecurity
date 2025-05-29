@@ -1,0 +1,11 @@
+question_id,question,our_agent_score,baseline_score,advantage
+1,What is a phishing attack and how can it be prevented?,9.4,7.1,2.3
+2,Explain the difference between symmetric and asymmetric encryption,8.7,4.8,4.0
+3,What are the key components of a zero-trust security model?,8.1,5.0,3.1
+4,How does SQL injection work and what are the mitigation strategies?,8.2,7.2,1.0
+5,What is the OWASP Top 10 and why is it important?,9.9,5.4,4.5
+6,Explain the concept of threat modeling in cybersecurity,8.2,5.4,2.8
+7,What are the differences between IDS and IPS systems?,8.7,8.0,0.7
+8,How does two-factor authentication enhance security?,8.4,4.4,4.0
+9,What is a DDoS attack and how can organizations defend against it?,8.3,5.6,2.7
+10,Explain the principle of least privilege in access control,8.6,7.0,1.6

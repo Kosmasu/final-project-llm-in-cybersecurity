@@ -1,3 +1,5 @@
+from typing import Generator
+from pydantic import BaseModel
 import streamlit as st
 
 from conversations import Conversation
@@ -72,6 +74,88 @@ for message in convo.messages:
         st.markdown(message.content)
 
 
+class Alert(BaseModel):
+    message: str
+
+
+def ask_question(user_message: str) -> Generator[Alert | str, None, None]:
+    # Put main into here
+    mode = determine_mode(llm=llm_base, user_query=user_message)
+    if mode is None:
+        mode = Mode(
+            reason="Failed to determine mode. Defaulting to QA.",
+            mode="qa",
+        )
+
+    trace_id = langfuse_context.get_current_trace_id()
+    if trace_id:
+        langfuse.event(
+            trace_id=trace_id,
+            name=f"{mode.mode} mode",
+            input=user_message,
+            output=mode,
+        )
+
+    if mode.mode == "qa":
+        # QA mode pipeline here
+        yield Alert(
+            message="Q&A mode detected. Performing web search for relevant information..."
+        )
+
+        # Perform web search to get context
+        context_docs = search_and_fetch_contents(user_message, num_results=3)
+
+        if context_docs:
+            yield Alert(
+                message=f"Found {len(context_docs)} relevant document(s). Generating response..."
+            )
+        else:
+            yield Alert(
+                message="No specific documents found via web search. Generating response based on general knowledge..."
+            )
+
+        response = answer_question(
+            llm=llm_qa,
+            convo=convo,
+            user_query=user_message,
+            context=context_docs,  # Pass fetched context
+        )
+    else:
+        # Phishing detection mode pipeline here
+        yield Alert(message="Phishing detection mode detected. Classifying email...")
+
+        phishing_evaluation = classify_phishing_pretrained(
+            llm=llm_phishing,
+            retriever=loaded_bm25_retriever,
+            user_query=user_message,
+        )
+        if not phishing_evaluation:
+            response = "Failed to classify email."
+            yield Alert(message=response)
+        else:
+            yield Alert(message="Phishing evaluation completed. Generating response...")
+            response = f"""
+### Phishing Evaluation
+Email is detected as {"**PHISHING**" if phishing_evaluation.is_phishing else "**NOT PHISHING**"}.
+### Reason
+{phishing_evaluation.reason}
+### Explanation
+{phishing_evaluation.explanation}
+""".strip()
+
+    with st.chat_message("assistant"):
+        st.markdown(response)
+    convo.add_user_message(user_message)
+    convo.add_assistant_message(response)
+    langfuse_context.update_current_observation(
+        output=response,
+    )
+
+    st.session_state[ID_CONVO] = convo
+    yield response
+
+
+
 @observe(capture_input=False, capture_output=False, name="answer")
 def main():
     if user_message := st.chat_input("Type a message..."):
@@ -81,84 +165,14 @@ def main():
             input=user_message,
         )
 
-        mode = determine_mode(llm=llm_base, user_query=user_message)
-        if mode is None:
-            mode = Mode(
-                reason="Failed to determine mode. Defaulting to QA.",
-                mode="qa",
-            )
-
-        trace_id = langfuse_context.get_current_trace_id()
-        if trace_id:
-            langfuse.event(
-                trace_id=trace_id,
-                name=f"{mode.mode} mode",
-                input=user_message,
-                output=mode,
-            )
-
-        if mode.mode == "qa":
-            # QA mode pipeline here
-            with st.chat_message("alert", avatar=":material/settings:"):
-                st.markdown(
-                    "Q&A mode detected. Performing web search for relevant information..."
-                )
-
-            # Perform web search to get context
-            context_docs = search_and_fetch_contents(user_message, num_results=3)
-
-            if context_docs:
+        for output in ask_question(user_message):
+            if isinstance(output, str):
+                with st.chat_message("assistant"):
+                    st.markdown(output)
+            elif isinstance(output, Alert):
+                alert = output
                 with st.chat_message("alert", avatar=":material/settings:"):
-                    st.markdown(
-                        f"Found {len(context_docs)} relevant document(s). Generating response..."
-                    )
-            else:
-                with st.chat_message("alert", avatar=":material/settings:"):
-                    st.markdown(
-                        "No specific documents found via web search. Generating response based on general knowledge..."
-                    )
-
-            response = answer_question(
-                llm=llm_qa,
-                convo=convo,
-                user_query=user_message,
-                context=context_docs,  # Pass fetched context
-            )
-        else:
-            # Phishing detection mode pipeline here
-            with st.chat_message("alert", avatar=":material/settings:"):
-                st.markdown("Phishing detection mode detected. Classifying email...")
-
-            phishing_evaluation = classify_phishing_pretrained(
-                llm=llm_phishing,
-                retriever=loaded_bm25_retriever,
-                user_query=user_message,
-            )
-            if not phishing_evaluation:
-                response = "Failed to classify email."
-                with st.chat_message("alert", avatar=":material/settings:"):
-                    st.markdown(response)
-            else:
-                with st.chat_message("alert", avatar=":material/settings:"):
-                    st.markdown("Phishing evaluation completed. Generating response...")
-                response = f"""
-### Phishing Evaluation
-Email is detected as {"**PHISHING**" if phishing_evaluation.is_phishing else "**NOT PHISHING**"}.
-### Reason
-{phishing_evaluation.reason}
-### Explanation
-{phishing_evaluation.explanation}
-""".strip()
-
-        with st.chat_message("assistant"):
-            st.markdown(response)
-        convo.add_user_message(user_message)
-        convo.add_assistant_message(response)
-        langfuse_context.update_current_observation(
-            output=response,
-        )
-
-        st.session_state[ID_CONVO] = convo
+                    st.markdown(alert)
 
 
 main()

@@ -1,0 +1,9 @@
+email_id,email_subject,true_label,is_phishing_text,our_agent_prediction,our_agent_correct,our_agent_confidence,baseline_prediction,baseline_correct,baseline_confidence
+1,Urgent: Verify Your Bank Account,True,Phishing,True,True,0.97,False,False,0.66
+2,Meeting Reminder - Q4 Planning,False,Legitimate,False,True,0.97,True,False,0.62
+3,Your Package Delivery Failed,True,Phishing,True,True,0.9,True,True,0.61
+4,Weekly Security Newsletter,False,Legitimate,False,True,0.87,False,True,0.6
+5,"Congratulations! You've Won $10,000",True,Phishing,True,True,0.93,True,True,0.66
+6,Password Expiry Notice,False,Legitimate,False,True,0.98,False,True,0.79
+7,Immediate Action Required - Account Suspension,True,Phishing,True,True,0.94,True,True,0.79
+8,Project Update from Sarah,False,Legitimate,False,True,0.94,False,True,0.65

@@ -1,0 +1,6 @@
+metric_category,metric_name,our_agent_value,baseline_value,improvement
+Q&A,Average Score,8.65,5.99,2.66
+Phishing Detection,Accuracy,1.0,0.75,0.25
+Phishing Detection,Precision,1.0,0.75,0.25
+Phishing Detection,Recall,1.0,0.75,0.25
+Phishing Detection,F1 Score,1.0,0.75,0.25

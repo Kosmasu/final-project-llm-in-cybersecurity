@@ -1,0 +1,61 @@
+question_id,question,criteria,our_agent_score,baseline_score,advantage
+1,What is a phishing attack and how can it be prevented?,accuracy,8.6,6.0,2.7
+1,What is a phishing attack and how can it be prevented?,completeness,9.8,6.6,3.1
+1,What is a phishing attack and how can it be prevented?,clarity,9.7,6.9,2.8
+1,What is a phishing attack and how can it be prevented?,technical_depth,8.9,4.3,4.6
+1,What is a phishing attack and how can it be prevented?,practical_applicability,8.4,6.8,1.6
+1,What is a phishing attack and how can it be prevented?,citation_quality,7.8,5.0,2.8
+2,Explain the difference between symmetric and asymmetric encryption,accuracy,9.9,6.9,3.0
+2,Explain the difference between symmetric and asymmetric encryption,completeness,8.8,5.3,3.5
+2,Explain the difference between symmetric and asymmetric encryption,clarity,8.8,7.4,1.4
+2,Explain the difference between symmetric and asymmetric encryption,technical_depth,9.6,6.1,3.5
+2,Explain the difference between symmetric and asymmetric encryption,practical_applicability,8.4,7.9,0.5
+2,Explain the difference between symmetric and asymmetric encryption,citation_quality,8.6,7.8,0.8
+3,What are the key components of a zero-trust security model?,accuracy,8.5,6.3,2.1
+3,What are the key components of a zero-trust security model?,completeness,8.9,6.4,2.5
+3,What are the key components of a zero-trust security model?,clarity,8.0,5.9,2.1
+3,What are the key components of a zero-trust security model?,technical_depth,9.2,7.5,1.7
+3,What are the key components of a zero-trust security model?,practical_applicability,8.9,6.1,2.9
+3,What are the key components of a zero-trust security model?,citation_quality,9.6,6.0,3.5
+4,How does SQL injection work and what are the mitigation strategies?,accuracy,8.6,7.1,1.5
+4,How does SQL injection work and what are the mitigation strategies?,completeness,8.5,8.2,0.2
+4,How does SQL injection work and what are the mitigation strategies?,clarity,8.4,6.6,1.8
+4,How does SQL injection work and what are the mitigation strategies?,technical_depth,9.0,6.8,2.2
+4,How does SQL injection work and what are the mitigation strategies?,practical_applicability,9.2,7.6,1.6
+4,How does SQL injection work and what are the mitigation strategies?,citation_quality,9.2,7.4,1.8
+5,What is the OWASP Top 10 and why is it important?,accuracy,9.6,7.7,1.9
+5,What is the OWASP Top 10 and why is it important?,completeness,8.7,6.1,2.6
+5,What is the OWASP Top 10 and why is it important?,clarity,8.8,7.4,1.4
+5,What is the OWASP Top 10 and why is it important?,technical_depth,9.3,3.5,5.7
+5,What is the OWASP Top 10 and why is it important?,practical_applicability,8.9,8.5,0.4
+5,What is the OWASP Top 10 and why is it important?,citation_quality,9.2,6.8,2.4
+6,Explain the concept of threat modeling in cybersecurity,accuracy,9.3,5.3,4.0
+6,Explain the concept of threat modeling in cybersecurity,completeness,9.4,6.3,3.1
+6,Explain the concept of threat modeling in cybersecurity,clarity,9.2,6.5,2.7
+6,Explain the concept of threat modeling in cybersecurity,technical_depth,7.7,5.9,1.9
+6,Explain the concept of threat modeling in cybersecurity,practical_applicability,7.4,5.7,1.7
+6,Explain the concept of threat modeling in cybersecurity,citation_quality,8.7,5.8,2.9
+7,What are the differences between IDS and IPS systems?,accuracy,9.3,5.2,4.1
+7,What are the differences between IDS and IPS systems?,completeness,8.2,5.7,2.5
+7,What are the differences between IDS and IPS systems?,clarity,7.9,7.0,0.9
+7,What are the differences between IDS and IPS systems?,technical_depth,9.2,5.4,3.8
+7,What are the differences between IDS and IPS systems?,practical_applicability,7.9,7.4,0.5
+7,What are the differences between IDS and IPS systems?,citation_quality,8.6,6.5,2.1
+8,How does two-factor authentication enhance security?,accuracy,9.7,6.9,2.7
+8,How does two-factor authentication enhance security?,completeness,8.7,6.2,2.5
+8,How does two-factor authentication enhance security?,clarity,9.3,6.0,3.3
+8,How does two-factor authentication enhance security?,technical_depth,9.2,5.0,4.2
+8,How does two-factor authentication enhance security?,practical_applicability,7.4,7.7,-0.3
+8,How does two-factor authentication enhance security?,citation_quality,9.6,6.8,2.8
+9,What is a DDoS attack and how can organizations defend against it?,accuracy,8.5,7.0,1.5
+9,What is a DDoS attack and how can organizations defend against it?,completeness,8.3,5.7,2.5
+9,What is a DDoS attack and how can organizations defend against it?,clarity,8.8,6.2,2.6
+9,What is a DDoS attack and how can organizations defend against it?,technical_depth,8.7,7.0,1.7
+9,What is a DDoS attack and how can organizations defend against it?,practical_applicability,9.3,7.6,1.7
+9,What is a DDoS attack and how can organizations defend against it?,citation_quality,8.9,5.6,3.3
+10,Explain the principle of least privilege in access control,accuracy,9.2,6.2,3.0
+10,Explain the principle of least privilege in access control,completeness,8.2,5.8,2.4
+10,Explain the principle of least privilege in access control,clarity,8.5,5.7,2.8
+10,Explain the principle of least privilege in access control,technical_depth,8.8,6.0,2.8
+10,Explain the principle of least privilege in access control,practical_applicability,9.5,5.8,3.7
+10,Explain the principle of least privilege in access control,citation_quality,9.7,7.4,2.3
