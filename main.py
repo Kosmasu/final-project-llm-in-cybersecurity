@@ -1,7 +1,7 @@
 import streamlit as st
 
 from conversations import Conversation
-from embedding import load_bm25_retriever
+from embedding import create_embedding_model, load_bm25_retriever
 from llm import LLM, LLMName
 from phishing_mode import classify_phishing_pretrained
 from search import search_and_fetch_contents  # Added import
@@ -13,6 +13,7 @@ from langfuse.decorators import langfuse_context, observe
 
 from settings import LANGFUSE_PUBLIC_KEY, LANGFUSE_SECRET_KEY, RETRIEVER_PATH
 
+create_embedding_model()
 
 langfuse = Langfuse(
     public_key=LANGFUSE_PUBLIC_KEY,

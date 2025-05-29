@@ -1,3 +1,4 @@
+import os
 from typing import List, Dict, Any
 from pydantic import BaseModel, Field, field_validator
 from llama_index.core.base.base_retriever import BaseRetriever
@@ -7,8 +8,15 @@ from llama_index.core import Settings
 from llama_index.core.callbacks import CallbackManager
 from langfuse.llama_index import LlamaIndexCallbackHandler
 from langfuse.decorators import observe
+import pandas as pd
+import Stemmer
+from llama_index.core import Document, StorageContext
+from llama_index.core.node_parser import SentenceSplitter
+from llama_index.embeddings.huggingface import HuggingFaceEmbedding
+from llama_index.core.storage.docstore import SimpleDocumentStore
 
-from settings import LANGFUSE_PUBLIC_KEY, LANGFUSE_SECRET_KEY
+
+from settings import LANGFUSE_PUBLIC_KEY, LANGFUSE_SECRET_KEY, RETRIEVER_PATH
 import utils
 
 langfuse_callback_handler = LlamaIndexCallbackHandler(
@@ -17,6 +25,57 @@ langfuse_callback_handler = LlamaIndexCallbackHandler(
     host="https://cloud.langfuse.com",
 )
 Settings.callback_manager = CallbackManager([langfuse_callback_handler])
+
+
+def create_embedding_model():
+    # Check if the embedding model already exists
+    if os.path.exists(RETRIEVER_PATH):
+        print(f"BM25 retriever already exists at {RETRIEVER_PATH}. Skipping creation.")
+        return
+    df = pd.read_csv("../datasets/merged_emails.csv")
+    # Initialize HuggingFace embedding model and configure settings
+    embed_model = HuggingFaceEmbedding(
+        model_name="sentence-transformers/all-MiniLM-L6-v2"
+    )
+
+    # Configure global settings with the embedding model
+    Settings.embed_model = embed_model
+
+    # Convert emails to documents
+    documents = []
+    for i, row in df.iterrows():
+        # ensure body is a string
+        if not isinstance(row["body"], str) or not row["body"]:
+            continue
+        text = str(row["body"])
+        metadata = {
+            "email_id": i,
+            "label": int(row.get("label", -1)),
+        }
+
+        doc = Document(text=text, metadata=metadata)
+        documents.append(doc)
+
+    # Create a docstore to store nodes
+    docstore = SimpleDocumentStore()
+
+    # Create storage context
+    storage_context = StorageContext.from_defaults(docstore=docstore)
+
+    # Create a node parser with a larger chunk size to accommodate metadata
+    splitter = SentenceSplitter(chunk_size=1024)  # Increased from default 1024
+
+    nodes = splitter.get_nodes_from_documents(documents)
+
+    # We can pass in the index, docstore, or list of nodes to create the retriever
+    bm25_retriever = BM25Retriever.from_defaults(
+        nodes=nodes,
+        similarity_top_k=2,
+        stemmer=Stemmer.Stemmer("english"),
+        language="english",
+    )
+
+    bm25_retriever.persist(RETRIEVER_PATH)
 
 
 class EmailResult(BaseModel):
@@ -55,6 +114,7 @@ def load_bm25_retriever(persist_dir: str) -> BM25Retriever:
         The loaded BM25 retriever
     """
     return BM25Retriever.from_persist_dir(persist_dir)
+
 
 @observe()
 def find_similar_emails(
