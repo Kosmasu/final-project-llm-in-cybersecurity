@@ -28,19 +28,19 @@ ID_CONVO = "convo"
 ID_RETRIEVER = "retriever"
 
 if ID_LLM_BASE not in st.session_state:
-    llm_base: LLM = LLM(model_name=LLMName.DEEPINFRA_LLAMA_3_1_8B)
+    llm_base: LLM = LLM(model_name=LLMName.LLAMA_3_1_8B)
     st.session_state[ID_LLM_BASE] = llm_base
 else:
     llm_base: LLM = st.session_state[ID_LLM_BASE]
 
 if ID_LLM_QA not in st.session_state:
-    llm_qa: LLM = LLM(model_name=LLMName.DEEPINFRA_LLAMA_3_1_8B)
+    llm_qa: LLM = LLM(model_name=LLMName.LLAMA_3_1_CHATQA)
     st.session_state[ID_LLM_QA] = llm_qa
 else:
     llm_qa: LLM = st.session_state[ID_LLM_QA]
 
 if ID_LLM_PHISHING not in st.session_state:
-    llm_phishing: LLM = LLM(model_name=LLMName.DEEPINFRA_LLAMA_3_1_8B)
+    llm_phishing: LLM = LLM(model_name=LLMName.GEMMA_1B_FINETUNED)
     st.session_state[ID_LLM_PHISHING] = llm_phishing
 else:
     llm_phishing: LLM = st.session_state[ID_LLM_PHISHING]

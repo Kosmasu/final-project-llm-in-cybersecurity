@@ -14,20 +14,23 @@ from settings import DEEPINFRA_API_KEY
 
 T = TypeVar("T", bound=BaseModel)
 
-# client = OpenAI(
-#     base_url="http://localhost:11434/v1/",
-#     api_key="ollama",
-# )
-
-
 client = OpenAI(
-    api_key=DEEPINFRA_API_KEY,
-    base_url="https://api.deepinfra.com/v1/openai",
+    base_url="http://localhost:11434/v1/",
+    api_key="ollama",
 )
+
+
+# client = OpenAI(
+#     api_key=DEEPINFRA_API_KEY,
+#     base_url="https://api.deepinfra.com/v1/openai",
+# )
 
 class LLMName(str, enum.Enum):
     LLAMA_3_1_8B = "llama3.1"
+    GEMMA_1B_FINETUNED = "gemma-1b-finetuned"
     LLAMA_3_1_CHATQA = "llama3-chatqa"
+
+    # For testing so its faster
     DEEPINFRA_LLAMA_3_1_8B = "meta-llama/Meta-Llama-3.1-8B-Instruct-Turbo"
 
 
