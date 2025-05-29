@@ -32,7 +32,34 @@ def create_embedding_model():
     if os.path.exists(RETRIEVER_PATH):
         print(f"BM25 retriever already exists at {RETRIEVER_PATH}. Skipping creation.")
         return
-    df = pd.read_csv("../datasets/merged_emails.csv")
+
+    # Load the emails from ./email_chunks/merged_emails_part_01.csv -> merged_emails_part_12.csv
+    # Load the emails from CSV files
+    csv_files = []
+    for i in range(1, 13):  # Files 01 to 12
+        file_path = f"./email_chunks/merged_emails_part_{i:02d}.csv"
+        if os.path.exists(file_path):
+            csv_files.append(file_path)
+        else:
+            print(f"Warning: File {file_path} not found, skipping...")
+
+    # Read and concatenate all CSV files
+    df_list = []
+    for file_path in csv_files:
+        try:
+            df_part = pd.read_csv(file_path)
+            df_list.append(df_part)
+            print(f"Loaded {len(df_part)} emails from {file_path}")
+        except Exception as e:
+            print(f"Error loading {file_path}: {e}")
+
+    if df_list:
+        df = pd.concat(df_list, ignore_index=True)
+        print(f"Total emails loaded: {len(df)}")
+    else:
+        raise ValueError("No email files were successfully loaded")
+
+
     # Initialize HuggingFace embedding model and configure settings
     embed_model = HuggingFaceEmbedding(
         model_name="sentence-transformers/all-MiniLM-L6-v2"
